@@ -9,6 +9,8 @@ module com.example.scraping {
     requires java.sql;
 
     requires htmlunit;
+    requires mysql.connector.java;
+    requires java.desktop;
 
     opens com.example.scraping to javafx.fxml;
     exports com.example.scraping;
