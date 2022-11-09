@@ -1,9 +1,11 @@
 package com.example.util;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The type Enregistrement bdd.
@@ -20,9 +22,15 @@ public class EnregistrementBDD {
      * @param genre       the article's genre
      * @param annee       the article's year
      */
-    public static void saveBDD(String titre,String description, double prix, int genre, int annee){                                                     //Méthode qui se connecte à la BDD et fait la requête SQL
+    public static void saveBDD(String titre,String description, double prix, int genre, int annee) throws IOException {                                                     //Méthode qui se connecte à la BDD et fait la requête SQL
+        ArrayList<String> liste = new ArrayList<String>();
+        String nomFichierEntree = "texte"+ File.separator+"infosConnexion.txt";
+        String ligne;
+        BufferedReader br = new BufferedReader(new FileReader(nomFichierEntree));
+        while ((ligne = br.readLine()) != null)
+            liste.add(ligne);
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://109.234.161.28:3306/gretaxao_thibaut-langlais", "gretaxao_thibaut-langlais", "TLanglais2022!");
+                "jdbc:mysql://"+liste.get(0)+":"+liste.get(1)+"/"+liste.get(2), liste.get(3), liste.get(4));
              PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT)) {
             preparedStatement.setString(1, titre);
             preparedStatement.setString(2, description);

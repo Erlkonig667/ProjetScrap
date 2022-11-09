@@ -5,7 +5,7 @@ package com.example.util;
  */
 public class ArticleScrap {
     private String titre;
-    private int genre;
+    private String genre;
     private int annee;
     private double prix;
     private String description;
@@ -21,7 +21,7 @@ public class ArticleScrap {
      * @param description the article's description
      * @param url         the article's url
      */
-    public ArticleScrap(String titre, int genre, Integer annee, double prix, String description, String url){
+    public ArticleScrap(String titre, String genre, Integer annee, double prix, String description, String url){
         this.titre=titre;
         this.genre=genre;
         this.annee=annee;
@@ -54,7 +54,7 @@ public class ArticleScrap {
      *
      * @return the article's genre
      */
-    public int getGenre() {
+    public String getGenre() {
         return genre;
     }
 
@@ -63,7 +63,7 @@ public class ArticleScrap {
      *
      * @param genre the article's genre
      */
-    public void setGenre(int genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

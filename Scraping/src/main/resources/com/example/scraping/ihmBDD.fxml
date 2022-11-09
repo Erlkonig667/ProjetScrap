@@ -23,7 +23,7 @@
       <Label layoutX="146.0" layoutY="260.0" text="Login Utilisateur:" />
       <Label layoutX="146.0" layoutY="208.0" text="Numéro de Port de la BDD:" />
       <Label layoutX="146.0" layoutY="157.0" text="Nom de la BDD:" />
-      <Button fx:id="valider" layoutX="264.0" layoutY="391.0" mnemonicParsing="false" text="Valider" onAction="#fermer" />
+      <Button fx:id="valider" layoutX="264.0" layoutY="391.0" mnemonicParsing="false" text="Valider" onAction="#enregistrementInfosConnexion" />
       <Button fx:id="fermer" layoutX="400.0" layoutY="391.0" mnemonicParsing="false" onAction="#fermer" text="Fermer" />
       <Button fx:id="effacer" layoutX="331.0" layoutY="391.0" mnemonicParsing="false" onAction="#effacer" text="Effacer" />
       <Button fx:id="testConnexion" layoutX="128.0" layoutY="391.0" mnemonicParsing="false" text="Tester la connexion" onAction="#testerConnexion" />

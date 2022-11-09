@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -111,5 +112,25 @@ public class BddController {
             label1.setText("La connexion a échoué.Veuillez réessayer.");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method used to save the database's parameters in a textFile
+     *
+     * @throws IOException the io exception
+     */
+    public void enregistrementInfosConnexion() throws IOException {
+        String adresseIP=nomServeur.getText();
+        String numeroPort=numeroBDD.getText();
+        String nomBase=nomBDD.getText();
+        String log =login.getText();
+        String mdp =password.getText();
+        String nomFichierSortie = "texte"+ File.separator+"infosConnexion.txt";
+        PrintWriter ecrire;
+        ecrire =  new PrintWriter(new BufferedWriter(new FileWriter(nomFichierSortie)));
+        ecrire.println(adresseIP+"\n"+numeroPort+"\n"+nomBase+"\n"+log+"\n"+mdp);
+        ecrire.close();
+        Stage stage = (Stage) fermer.getScene().getWindow();
+        stage.close();
     }
 }

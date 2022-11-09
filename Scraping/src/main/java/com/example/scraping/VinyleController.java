@@ -17,10 +17,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -41,6 +40,15 @@ public class VinyleController {
      */
     public static ArrayList<ArticleScrap> getListeArticles() {
         return listeArticles;
+    }
+
+    /**
+     * Sets the ArrayList.
+     *
+     * @param listeArticles the new ArrayList
+     */
+    public static void setListeArticles(ArrayList<ArticleScrap> listeArticles) {
+        VinyleController.listeArticles = listeArticles;
     }
 
     /**
@@ -248,6 +256,7 @@ public class VinyleController {
         Task<Void> task = new Task() {
             @Override
             public Void call() {
+                setListeArticles(new ArrayList<ArticleScrap>());
                 updateProgress(0,1);
                 double min = Double.parseDouble(prixMin.getText());
                 double max = Double.parseDouble(prixMax.getText());
@@ -271,7 +280,7 @@ public class VinyleController {
                 }
                 if (fnac.isSelected()) {
                     try {
-                        scrap.scrapFnac(recherche, min, max, annee);
+                        scrap.scrapFnac(recherche, min, max, annee,genreChoisi);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -289,7 +298,7 @@ public class VinyleController {
                 }
                 if (leBonCoin.isSelected()) {
                     try {
-                        scrap.scrapBonCoin(recherche, min, max);
+                        scrap.scrapBonCoin(recherche, min, max,genreChoisi);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -298,7 +307,7 @@ public class VinyleController {
                 }
                 if (mesVinyles.isSelected()) {
                     try {
-                        scrap.scrapMesVinyles(recherche, min, max, annee);
+                        scrap.scrapMesVinyles(recherche, min, max, annee,genreChoisi);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -307,7 +316,7 @@ public class VinyleController {
                 }
                 if (cultureFactory.isSelected()) {
                     try {
-                        scrap.scrapCultureFactory(recherche, min, max);
+                        scrap.scrapCultureFactory(recherche, min, max,genreChoisi);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -315,6 +324,8 @@ public class VinyleController {
                     updateProgress(nbScrapEffectue,nbScrapTotal);
                 }
                 afficherResultats(res += affichageListe());
+                if (getListeArticles().isEmpty())
+                    resultats.setText("Nous n'avons pas trouvé d'article correspondant à votre recherche sur les sites sélectionnés.");
                 return null ;
             }
         };
@@ -495,7 +506,13 @@ public class VinyleController {
         Label label1=new Label("Transmission des données à la base de données.");
         Label label2=new Label("Cliquez sur Valider pour lancer la transmission:");
         Button button1= new Button("Valider");
-        button1.setOnAction(e -> enregistrerBDD());
+        button1.setOnAction(e -> {
+            try {
+                enregistrerBDD();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         Button button2= new Button("Annuler");
         button2.setOnAction(e -> popUpWindow.close());
         VBox layout= new VBox(10);
@@ -510,16 +527,60 @@ public class VinyleController {
      * Method that sends the results of the search to the database.
      */
     @FXML
-    private void enregistrerBDD(){                                                                                      //Méthode qui enregistre les résultats de la recherche dans la base de données
+    private void enregistrerBDD() throws IOException {                                                                                      //Méthode qui enregistre les résultats de la recherche dans la base de données
+        ArrayList<String> liste = new ArrayList<String>();
+        String nomFichierEntree = "texte"+ File.separator+"infosConnexion.txt";
+        String ligne;
+        BufferedReader br = new BufferedReader(new FileReader(nomFichierEntree));
+        while ((ligne = br.readLine()) != null)
+            liste.add(ligne);
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://109.234.161.28:3306/gretaxao_thibaut-langlais", "gretaxao_thibaut-langlais", "TLanglais2022!");)
+                "jdbc:mysql://"+liste.get(0)+":"+liste.get(1)+"/"+liste.get(2), liste.get(3), liste.get(4));)
         { for (ArticleScrap a: this.listeArticles){
-            EnregistrementBDD.saveBDD(a.getTitre(),a.getDescription(),a.getPrix(),a.getGenre(),a.getAnnee());
+            EnregistrementBDD.saveBDD(a.getTitre(),a.getDescription(),a.getPrix(),genreStringToInt(a.getGenre()),a.getAnnee());
         }
         info.setText("Les données ont bien été transmises à la base.");}
-        catch (SQLException e) {
+        catch (SQLException | IOException e) {
             info.setText("La transmission des données a échoué.Veuillez réessayer.");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Method to convert the genre into an int for the database
+     *
+     * @param genre the genre that was selected for the search
+     * @return the corresponding int
+     */
+    public int genreStringToInt(String genre) {                                                                          //Méthode qui convertit le genre choisi en entier afin de pouvoir par la suite envoyer les données dans la BDD
+        switch (genre) {
+            case "Rock":
+                return 1;
+            case "Blues":
+                return 2;
+            case "Jazz":
+                return 3;
+            case "Reggae":
+                return 4;
+            case "Funk":
+                return 5;
+            case "Electro":
+                return 6;
+            case "DubStep":
+                return 7;
+            case "Soul":
+                return 8;
+            default:
+                return 9;
+        }
+    }
+
+    /**
+     * Method that opens the user guide.
+     */
+    public void onModeEmploiClick() throws IOException {                                                                //Méthode pour ouvrir le guide développeur
+        Desktop d = Desktop.getDesktop();
+        File guide = new File("guides" + File.separator + "GuideUtilisateur.pdf");
+        d.open(guide);
     }
 }

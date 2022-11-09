@@ -22,7 +22,7 @@ public class Scrap {
      * @param max   the maximum price
      * @throws IOException the io exception
      */
-    public void scrapBonCoin(String titre, double min, double max) throws IOException {                                 //Méthode qui effectue le scraping du site Le Bon Coin
+    public void scrapBonCoin(String titre, double min, double max, String genreChoisi) throws IOException {                                 //Méthode qui effectue le scraping du site Le Bon Coin
         String url = "https://www.leboncoin.fr/recherche?category=26&text=" + titre + "&price=" + min + "-" + max;
         WebClient webClient = new WebClient();
 
@@ -44,7 +44,7 @@ public class Scrap {
                     for (HtmlElement b : description) {
                         String descri = b.getTextContent();
                         String lien = String.valueOf(page2.getUrl());
-                        ArticleScrap article1 = new ArticleScrap(value,genreStringToInt("divers"),0,prixFinal,descri,lien);
+                        ArticleScrap article1 = new ArticleScrap(value,genreChoisi,0,prixFinal,descri,lien);
                         VinyleController.getListeArticles().add(article1);
                     }
                 }
@@ -61,7 +61,7 @@ public class Scrap {
      * @param annee the year
      * @throws IOException the io exception
      */
-    public void scrapFnac(String titre, double min, double max, int annee) throws IOException {                         //Méthode qui effectue le scraping du site Fnac
+    public void scrapFnac(String titre, double min, double max, int annee,String genreChoisi) throws IOException {                         //Méthode qui effectue le scraping du site Fnac
         String url = "https://www.fnac.com/SearchResult/ResultList.aspx?SCat=0&Search="+titre;
         WebClient webClient = new WebClient();
 
@@ -93,10 +93,10 @@ public class Scrap {
                     System.out.println("Toutes les conditions sont remplies, on prend");
                     String descri="";
                     if (!description.isEmpty()) {
-                        descri = description.get(0).getTextContent();
+                        descri = description.get(0).getTextContent().trim();
                     }
                     String lien = String.valueOf(page2.getUrl());
-                    ArticleScrap article1= new ArticleScrap(value,genreStringToInt("divers"),anneeParutionInt,prixFinal,descri,lien);
+                    ArticleScrap article1= new ArticleScrap(value,genreChoisi,anneeParutionInt,prixFinal,descri,lien);
                     VinyleController.getListeArticles().add(article1);
                 }
             }
@@ -147,7 +147,7 @@ public class Scrap {
                             if (!description.isEmpty())
                                 descri = description.get(0).getTextContent();
                             String lien = String.valueOf(page2.getUrl());
-                            ArticleScrap article1 = new ArticleScrap(value, genreStringToInt(genreRecherche), anneeParutionInt, prixFinal, descri, lien);
+                            ArticleScrap article1 = new ArticleScrap(value, genreRecherche, anneeParutionInt, prixFinal, descri, lien);
                             VinyleController.getListeArticles().add(article1);
                         }
                     }
@@ -165,7 +165,7 @@ public class Scrap {
      * @param annee the year
      * @throws IOException the io exception
      */
-    public void scrapMesVinyles(String titre, double min, double max,int annee) throws IOException {                    //Méthode qui effectue le scraping du site MesVinyles
+    public void scrapMesVinyles(String titre, double min, double max,int annee, String genreChoisi) throws IOException {                    //Méthode qui effectue le scraping du site MesVinyles
         String url = "https://mesvinyles.fr/fr/recherche?controller=search&s=" + titre;
         WebClient webClient = new WebClient();
 
@@ -200,7 +200,7 @@ public class Scrap {
                             if ((prixFinal <= max) && (prixFinal >= min)) {
                                 System.out.println("Toutes les conditions sont remplies, on prend");
                                 String lien = String.valueOf(page2.getUrl());
-                                ArticleScrap article1 = new ArticleScrap(value,genreStringToInt("divers"),anneeParutionInt,prixFinal,"",lien);
+                                ArticleScrap article1 = new ArticleScrap(value,genreChoisi,anneeParutionInt,prixFinal,"",lien);
                                 VinyleController.getListeArticles().add(article1);
                             }
                         }
@@ -218,7 +218,7 @@ public class Scrap {
      * @param max   the maximum price
      * @throws IOException the io exception
      */
-    public void scrapCultureFactory(String titre, double min, double max) throws IOException {                          //Méthode qui effectue le scraping du site Culture Factory
+    public void scrapCultureFactory(String titre, double min, double max, String genreChoisi) throws IOException {                          //Méthode qui effectue le scraping du site Culture Factory
         String url = "https://culturefactory.fr/recherche?controller=search&s=" + titre;
         WebClient webClient = new WebClient();
 
@@ -246,7 +246,7 @@ public class Scrap {
                                 if (!description.isEmpty())
                                     descri=description.get(0).getTextContent();
                                 String lien = String.valueOf(page2.getUrl());
-                                ArticleScrap article1 = new ArticleScrap(value,genreStringToInt("divers"),null,prixFinal,descri,lien);
+                                ArticleScrap article1 = new ArticleScrap(value,genreChoisi,null,prixFinal,descri,lien);
                                 VinyleController.getListeArticles().add(article1);
                             }
                         }
@@ -298,7 +298,7 @@ public class Scrap {
                                 if (!description.isEmpty())
                                     descri= description.get(0).getTextContent() + "\n";
                                 String lien = String.valueOf(page2.getUrl());
-                                ArticleScrap article1=new ArticleScrap(value,genreStringToInt(genreRecherche),anneeParutionInt,prixFinal,descri,lien);
+                                ArticleScrap article1=new ArticleScrap(value,genreRecherche,anneeParutionInt,prixFinal,descri,lien);
                                 VinyleController.getListeArticles().add(article1);
                             }
                         }
@@ -365,34 +365,5 @@ public class Scrap {
                 return 3;
         }
     }
-
-
-    /**
-     * Method to convert the genre into an int for the database
-     *
-     * @param genre the genre that was selected for the search
-     * @return the corresponding int
-     */
-    public int genreStringToInt(String genre){                                                                          //Méthode qui convertit le genre choisi en entier afin de pouvoir par la suite envoyer les données dans la BDD
-        switch (genre){
-            case "Rock":
-                return 1;
-            case "Blues":
-                return 2;
-            case "Jazz":
-                return 3;
-            case "Reggae":
-                return 4;
-            case "Funk":
-                return 5;
-            case "Electro":
-                return 6;
-            case  "DubStep":
-                return 7;
-            case "Soul":
-                return 8;
-            default:
-                return 9;
-        }
-    }
 }
+
