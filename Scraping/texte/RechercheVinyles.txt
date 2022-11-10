@@ -1,0 +1,45 @@
+RESULTATS DE VOTRE RECHERCHE:
+
+Titre=David Bowie
+Annee=1980
+Genre=Rock
+Prix=15.91€
+Description=
+URL=https://www.discogs.com/fr/master/1104748-David-Bowie-David-Bowie
+=============================================================================================================
+Titre=Canta David Bowie
+Annee=2017
+Genre=Rock
+Prix=19.9€
+Description=
+URL=https://www.discogs.com/fr/master/1333954-Andrea-Chimenti-Canta-David-Bowie
+=============================================================================================================
+Titre=Welcome To The Blackout (Live London '78)
+Annee=2018
+Genre=Rock
+Prix=10.0€
+Description=
+URL=https://www.discogs.com/fr/master/1386218-David-Bowie-Welcome-To-The-Blackout-Live-London-78
+=============================================================================================================
+Titre=Heroes
+Annee=1983
+Genre=Rock
+Prix=20.0€
+Description=
+URL=https://www.discogs.com/fr/master/349486-Nico-Heroes
+=============================================================================================================
+Titre=Loving The Alien [ 1983–1988 ]
+Annee=2018
+Genre=Rock
+Prix=48.0€
+Description=
+URL=https://www.discogs.com/fr/master/1437180-David-Bowie-Loving-The-Alien-19831988-
+=============================================================================================================
+Titre=Live
+Annee=2018
+Genre=Rock
+Prix=17.61€
+Description=
+URL=https://www.discogs.com/fr/master/2186167-David-Bowie-Live
+=============================================================================================================
+

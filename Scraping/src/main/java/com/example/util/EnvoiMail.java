@@ -46,7 +46,7 @@ public class EnvoiMail {
     public static void envoyerMail(String adresseMail,String nomFichier) throws Exception {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey("");
+        apiKey.setApiKey("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");
 
         try {
             TransactionalEmailsApi api = new TransactionalEmailsApi();
